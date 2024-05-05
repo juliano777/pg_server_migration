@@ -6,10 +6,10 @@
 
 
 
-[postgres $][old-gamma] Create an user for the new database  
+[postgres $][old-gamma] Create user and database
 ```bash
 # SQL string to create the user for the new database
-SQL="CREATE ROLE user_ftcf LOGIN ENCRYPTED PASSWORD '123'"
+SQL="CREATE ROLE user_ftcf REPLICATION LOGIN ENCRYPTED PASSWORD '123'"
 
 # With psql execute the statement
 psql -c "${SQL}"
@@ -21,8 +21,6 @@ SQL='CREATE DATABASE db_ftcf OWNER user_ftcf'
 psql -c "${SQL}"
 ```
 
-
-
 [postgres $][old-gamma] Populating the new database  
 ```bash
 # URL for the new database
@@ -32,7 +30,6 @@ french-towns-communes-francaises-1.0.tar.gz"
 
 # String for the file name
 F=`basename "${URL}"`
-
 
 # Create a new directory
 mkdir /tmp/db
@@ -50,13 +47,12 @@ D=`tar xvf /tmp/db/${F} -C /tmp/db/ | \
 psql -U user_ftcf -d db_ftcf -f ${D}/*.sql
 ```
 
-[postgres $][old-gamma] blablabla  
+[postgres $][old-gamma] Connect to the database via psql
 ```bash
 psql -U user_ftcf db_ftcf
 ```
 
-
-[>][old-gamma] Create a publication  
+[>][old-gamma] Create a publication
 
 ```sql 
 CREATE PUBLICATION pub_ftcf
@@ -66,6 +62,24 @@ CREATE PUBLICATION pub_ftcf
         public.towns;
 ```
 
+[postgres $][old-alpha] Create an user for the new database  
+```bash
+# SQL string to create the user for the new database
+SQL=("CREATE ROLE user_ftcf
+LOGIN
+ENCRYPTED PASSWORD '123'
+IN ROLE pg_create_subscription
+")
+
+# With psql execute the statement
+psql -c "${SQL}"
+
+# SQL string to create the new database and the new user as its owner
+SQL='CREATE DATABASE db_ftcf OWNER user_ftcf'
+
+# With psql execute the statement
+psql -c "${SQL}"
+```
 
 [postgres $][old-alpha] blablabla  
 ```bash
@@ -73,9 +87,9 @@ CREATE PUBLICATION pub_ftcf
 #hostname:port:database:username:password
 old-gamma.my-domain.local:5432:db_ftcf:user_ftcf:123
 old-gamma:5432:db_ftcf:user_ftcf:123
+localhost:5432:db_ftcf:user_ftcf:123
 EOF
 ```
-  
 
 [postgres $][old-alpha] String connection to old-gamma 
 ```bash
@@ -88,9 +102,12 @@ user=user_ftcf \
 ```
 
 
-[postgres $][old-alpha]  
+[postgres $][old-alpha] Create tables from a dump directly from old-gamma
 ```bash
-pg_dump --no-comments -O -x -d "${DBCONN}" -s -t public.departments -t public.regions -t public.towns | psql -U user_ftcf db_ftcf
+pg_dump --no-comments -O -x -d -s \
+    -d "${DBCONN}" \
+    -t public.departments \
+    -t public.regions -t public.towns | psql -U user_ftcf db_ftcf
 ```
 
 
@@ -98,9 +115,28 @@ pg_dump --no-comments -O -x -d "${DBCONN}" -s -t public.departments -t public.re
 ```bash
 psql -d db_ftcf -qc "
 CREATE SUBSCRIPTION sub_ftcf
-  CONNECTION '${DBCONN}'
-  PUBLICATION pub_ftcf;
+    CONNECTION '${DBCONN}'
+    PUBLICATION pub_ftcf
+    WITH (
+        create_slot = true,
+        slot_name = 'sub_ftcf_old_alpha'
+    )
 "
+```
+
+[postgres $][old-beta] Blablabla
+```bash
+
+```
+
+
+
+
+
+
+
+
+
 
 
 
