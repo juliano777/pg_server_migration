@@ -52,12 +52,16 @@ PGSUDO="postgres ALL=(ALL) NOPASSWD: \
 `which systemctl` start postgresql, \
 `which systemctl` stop postgresql, \
 `which systemctl` restart postgresql, \
-`which systemctl` reload postgresql"
+`which systemctl` reload postgresql, \
+`which systemctl` start postgresql@${PGMAJOR}-main.service, \
+`which systemctl` stop postgresql@${PGMAJOR}-main.service, \
+`which systemctl` restart postgresql@${PGMAJOR}-main.service, \
+`which systemctl` reload postgresql@${PGMAJOR}-main.service"
 
-# 
+# Add the new string to the sudoers file
 echo -e "\n${PGSUDO}" > /etc/sudoers.d/postgres
 
-# 
+# Adjusting the permissions
 chmod 0440 /etc/sudoers.d/postgres
 
 # Check if the new file has its syntax OK
@@ -71,7 +75,7 @@ visudo -c
 All checks must me OK.  
 If not check the reason and fix it.
 
-[$] Checking sudo with postgres user
+[postgres $][all] Checking sudo with postgres user
 ```bash
 sudo systemctl restart postgresql
 ```

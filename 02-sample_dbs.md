@@ -1,50 +1,53 @@
 ## Building our lab - sample databases
 
-[#][server-name] blablabla  
-
-```bash
-<command>
-```
-
 [pagila](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/pagila/pagila/pagila-0.10.1.zip)
 
 [french-towns-communes-francaises](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/french-towns-communes-francais/french-towns-communes-francaises-1.0/french-towns-communes-francaises-1.0.tar.gz)
 
-[postgres $][old-gamma] blablabla  
+
+
+[postgres $][old-gamma] Create an user for the new database  
 ```bash
-createuser -l -P user_ftcf
-```
-```
-Enter password for new role: 
-Enter it again: 
+# SQL string to create the user for the new database
+SQL="CREATE ROLE user_ftcf LOGIN ENCRYPTED PASSWORD '123'"
+
+# With psql execute the statement
+psql -c "${SQL}"
+
+# SQL string to create the new database and the new user as its owner
+SQL='CREATE DATABASE db_ftcf OWNER user_ftcf'
+
+# With psql execute the statement
+psql -c "${SQL}"
 ```
 
 
-[postgres $][old-gamma] blablabla  
+
+[postgres $][old-gamma] Populating the new database  
 ```bash
-# 
+# URL for the new database
 URL="https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/\
 french-towns-communes-francais/french-towns-communes-francaises-1.0/\
 french-towns-communes-francaises-1.0.tar.gz"
 
-# 
+# String for the file name
 F=`basename "${URL}"`
 
 
-#
-wget --quiet -cP /tmp/ ${URL}
+# Create a new directory
+mkdir /tmp/db
 
-#
-D=`tar xvf /tmp/${F} -C /tmp/ | \
+# Download the file
+wget -c --quiet -cP /tmp/db/ ${URL}
+
+# Get de directory
+D=`tar xvf /tmp/db/${F} -C /tmp/db/ | \
     grep -E '.sql$' | \
     head -1 | \
-    xargs -i dirname {}`
+    xargs -i dirname /tmp/db/{}`
 
-# 
-createdb -O user_ftcf db_ftcf
-
-# 
-psql -U user_ftcf -d db_ftcf -f /tmp/${D}/*.sql
+# Execute the SQL scripts
+psql -U user_ftcf -d db_ftcf -f ${D}/*.sql
 ```
 
 [postgres $][old-gamma] blablabla  
@@ -53,7 +56,7 @@ psql -U user_ftcf db_ftcf
 ```
 
 
-[>][old-gamma] blablabla  
+[>][old-gamma] Create a publication  
 
 ```sql 
 CREATE PUBLICATION pub_ftcf
@@ -72,15 +75,30 @@ old-gamma.my-domain.local:5432:db_ftcf:user_ftcf:123
 old-gamma:5432:db_ftcf:user_ftcf:123
 EOF
 ```
+  
+
+[postgres $][old-alpha] String connection to old-gamma 
+```bash
+DBCONN=("\
+host=old-gamma \
+port=5432 \
+dbname=db_ftcf \
+user=user_ftcf \
+")
+```
+
+
+[postgres $][old-alpha]  
+```bash
+pg_dump --no-comments -O -x -d "${DBCONN}" -s -t public.departments -t public.regions -t public.towns | psql -U user_ftcf db_ftcf
+```
+
 
 [postgres $][old-alpha] blablabla  
 ```bash
 psql -d db_ftcf -qc "
 CREATE SUBSCRIPTION sub_ftcf
-  CONNECTION 'host=old-gamma
-              port=5432
-              dbname=db_ftcf
-              user=postgres'
+  CONNECTION '${DBCONN}'
   PUBLICATION pub_ftcf;
 "
 
