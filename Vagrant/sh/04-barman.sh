@@ -24,6 +24,16 @@ cat << EOF > ~barman/.pgpass && chmod 0600 ~barman/.pgpass
 # hostname:port:database:username:password
 old-gamma:5432:postgres:user_barman:123
 old-gamma:5432:*:user_barman_stream:123
+old-alpha:5432:postgres:user_barman:123
+old-alpha:5432:*:user_barman_stream:123
+old-beta:5432:postgres:user_barman:123
+old-beta:5432:*:user_barman_stream:123
+new-gamma:5432:postgres:user_barman:123
+new-gamma:5432:*:user_barman_stream:123
+new-alpha:5432:postgres:user_barman:123
+new-alpha:5432:*:user_barman_stream:123
+new-beta:5432:postgres:user_barman:123
+new-beta:5432:*:user_barman_stream:123
 EOF
 
 chown barman: ~barman/.pgpass
