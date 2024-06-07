@@ -36,8 +36,6 @@ new-beta:5432:postgres:user_barman:123
 new-beta:5432:*:user_barman_stream:123
 EOF
 
-sudo chown -R barman: ~barman/.pgpass /etc/barman.*
-
 # Postgres servers configuration for Barman
 SRV='old-gamma old-alpha old-beta new-gamma new-alpha new-beta'
 
@@ -47,6 +45,7 @@ for i in ${SRV}; do
 done
 
 # Copy public SSH key
-sudo cp ~barman/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-barman.pub
+cp ~barman/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-barman.pub
 
-
+# Ownership to barman user and its primary group
+sudo chown -R barman: ~barman/.pgpass /etc/barman.*

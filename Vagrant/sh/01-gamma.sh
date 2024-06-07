@@ -24,9 +24,6 @@ psql -U user_ftcf -d db_ftcf -f ${D}/*.sql
 # Remove the directory
 rm -fr /tmp/db
 
-# Add a new configuration line needed for logical replication
-echo 'wal_level = logical' >> ${PGCONFDIR}/conf.d/00-provision.conf
-
 # Add a new configuration regarding Barman backup
 MSG="archive_command = 'barman-wal-archive barman00 `hostname -s` %p'"
 echo "${MSG}" > ${PGCONFDIR}/conf.d/02-barman.conf

@@ -23,7 +23,7 @@ echo 'Installing postgresql-common package'
 apt install -y postgresql-common > /dev/null
 
 # Script to automate repository configuration
-/usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+/usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y > /dev/null
 
 # PostgreSQL installation
 echo 'PostgreSQL installation'
