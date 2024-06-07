@@ -1,0 +1,206 @@
+Vagrant.configure('2') do |config|
+  # barman00 =================================================================
+  config.vm.define 'barman00' do |barman00|
+    barman00.vm.box = 'debian/bookworm64'
+    barman00.vm.hostname = 'barman00.my-domain'
+
+    barman00.vm.provider 'virtualbox' do |vb|
+      vb.name = 'barman00'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly',
+        '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    barman00.vm.network 'private_network', ip: '192.168.56.90',
+      virtualbox__intnet: 'vboxnet0'
+
+    barman00.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+
+    barman00.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/04-barman.sh'
+  end
+ 
+  # barman01 =================================================================
+  config.vm.define 'barman01' do |barman01|
+    barman01.vm.box = 'debian/bookworm64'
+    barman01.vm.hostname = 'barman01.my-domain'
+
+    barman01.vm.provider 'virtualbox' do |vb|
+      vb.name = 'barman01'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly',
+        '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    barman01.vm.network 'private_network', ip: '192.168.56.91',
+      virtualbox__intnet: 'vboxnet0'
+
+    barman01.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+
+    barman01.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/04-barman.sh'
+  end
+
+  # old-gamma ================================================================
+  config.vm.define 'old-gamma' do |gamma|
+    gamma.vm.box = 'debian/bookworm64'
+    gamma.vm.hostname = 'old-gamma.my-domain'
+
+    gamma.vm.provider 'virtualbox' do |vb|
+      vb.name = 'old-gamma'
+      vb.memory = '2048'
+      vb.cpus = 2
+
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+
+      vb.customize ['modifyvm',
+        :id,
+        '--natdnshostresolver1',
+        'on']
+
+      vb.customize ['modifyvm',
+        :id,
+        '--nic1',
+        'nat']
+
+      vb.customize ['modifyvm',
+        :id,
+        '--nic2',
+        'hostonly',
+        '--hostonlyadapter2',
+        'vboxnet0']
+    end
+
+    gamma.vm.network 'private_network',
+      ip: '192.168.56.13',
+      virtualbox__intnet: 'vboxnet0'
+
+    gamma.vm.provision 'shell',
+      inline: 'chmod +x /vagrant/sh/*'
+
+    gamma.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+
+    gamma.vm.provision 'shell',
+      inline: "sudo su - postgres -c '/vagrant/sh/01-gamma.sh'"
+
+  end  
+
+  # old-alpha ================================================================
+  config.vm.define 'old-alpha' do |alpha|
+    alpha.vm.box = 'debian/bookworm64'
+    alpha.vm.hostname = 'old-alpha.my-domain'
+
+    alpha.vm.provider 'virtualbox' do |vb|
+      vb.name = 'old-alpha'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly', '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    alpha.vm.network 'private_network', ip: '192.168.56.11', virtualbox__intnet: 'vboxnet0'
+
+    alpha.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+
+    alpha.vm.provision 'shell',
+      inline: "sudo su - postgres -c '/vagrant/sh/02-primary.sh'"     
+
+  end
+
+  # old-beta =================================================================
+  config.vm.define 'old-beta' do |beta|
+    beta.vm.box = 'debian/bookworm64'
+    beta.vm.hostname = 'old-beta.my-domain'
+
+    beta.vm.provider 'virtualbox' do |vb|
+      vb.name = 'old-beta'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly', '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    beta.vm.network 'private_network', ip: '192.168.56.12', virtualbox__intnet: 'vboxnet0'
+    beta.vm.provision 'shell', inline: 'sudo /vagrant/sh/00-all.sh'
+    beta.vm.provision 'shell',
+      inline: "sudo su - postgres -c '/vagrant/sh/03-provision-standby.sh'"
+  end
+
+  # new-gamma
+  config.vm.define 'new-gamma' do |gamma|
+    gamma.vm.box = 'debian/bookworm64'
+    gamma.vm.hostname = 'new-gamma.my-domain'
+
+    gamma.vm.provider 'virtualbox' do |vb|
+      vb.name = 'new-gamma'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly', '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    gamma.vm.network 'private_network', ip: '192.168.56.23', virtualbox__intnet: 'vboxnet0'
+    gamma.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+  end
+
+  # new-alpha ================================================================
+  config.vm.define 'new-alpha' do |alpha|
+    alpha.vm.box = 'debian/bookworm64'
+    alpha.vm.hostname = 'new-alpha.my-domain'
+
+    alpha.vm.provider 'virtualbox' do |vb|
+      vb.name = 'new-alpha'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly', '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    alpha.vm.network 'private_network', ip: '192.168.56.21', virtualbox__intnet: 'vboxnet0'
+    alpha.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+  end
+
+  # new-beta
+  config.vm.define 'new-beta' do |beta|
+    beta.vm.box = 'debian/bookworm64'
+    beta.vm.hostname = 'new-beta.my-domain'
+
+    beta.vm.provider 'virtualbox' do |vb|
+      vb.name = 'new-beta'
+      vb.memory = '2048'
+      vb.cpus = 2
+      vb.customize ['modifyvm', :id, '--groups', '/pg_server_migration']
+      vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
+      vb.customize ['modifyvm', :id, '--nic1', 'nat']
+      vb.customize ['modifyvm', :id, '--nic2', 'hostonly', '--hostonlyadapter2', 'vboxnet0']
+    end
+
+    beta.vm.network 'private_network', ip: '192.168.56.22', virtualbox__intnet: 'vboxnet0'
+    beta.vm.provision 'shell',
+      inline: 'sudo /vagrant/sh/00-all.sh'
+  end
+
+end
+

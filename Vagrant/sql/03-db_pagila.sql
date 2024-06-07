@@ -1,0 +1,4 @@
+-- 
+CREATE ROLE user_pagila LOGIN ENCRYPTED PASSWORD '123' REPLICATION;
+
+CREATE DATABASE db_pagila OWNER user_pagila;

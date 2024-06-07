@@ -1,0 +1,15 @@
+127.0.0.1	localhost
+
+# Old servers
+192.168.56.13 old-gamma.my-domain old-gamma
+192.168.56.11 old-alpha.my-domain old-alpha
+192.168.56.12 old-beta.my-domain old-beta
+
+# New servers
+192.168.56.23 new-gamma.my-domain new-gamma
+192.168.56.21 new-alpha.my-domain new-alpha
+192.168.56.22 new-beta.my-domain new-beta
+
+# Barman servers
+192.168.56.90 barman00.my-domain barman00
+192.168.56.91 barman01.my-domain barman01

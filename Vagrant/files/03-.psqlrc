@@ -1,0 +1,4 @@
+\set COMP_KEYWORD_CASE upper
+\set HISTCONTROL ignoreboth
+\x auto
+
