@@ -65,6 +65,4 @@ cat /vagrant/files/00-hosts > /etc/hosts
 
 #  Generate SSH key for postgres user
 su - postgres -c "ssh-keygen -P '' -t rsa -f ~/.ssh/id_rsa"
-
-#archive_mode = on
-#archive_command = 'barman-wal-archive barman00 pg1 %p'
+sudo cp ~postgres/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-postgres.pub

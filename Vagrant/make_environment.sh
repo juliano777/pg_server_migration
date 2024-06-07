@@ -31,4 +31,5 @@ done
 
 # Remove all .deb files
 rm -fr archives/*
+rm -fr ssh/*
 

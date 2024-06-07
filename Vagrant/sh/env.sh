@@ -32,7 +32,7 @@ PKG='bash-completion debconf neovim pkg-config rsync unzip'
 CLUSTER_NAME="`hostname -s | tr '-' '_'`"
 
 # Command to add the barman public keys
-ADD_PUB_KEY='cat /vagrant/ssh/barman-* >> ~/.ssh/authorized_keys'
+ADD_PUB_KEY='cat /vagrant/ssh/* >> ~/.ssh/authorized_keys'
 
 # Barman servers
 BARMAN_SERVERS='barman00 barman01'

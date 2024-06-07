@@ -34,3 +34,6 @@ for i in ${SRV}; do
     sed "s/<PG>/${i}/g" /vagrant/files/06-server-backup.conf | \
         sed "s/<BARMAN>/`hostname -s`/g" > /etc/barman.d/${i}.conf
 done
+
+# Copy public SSH key
+sudo cp ~barman/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-barman.pub
