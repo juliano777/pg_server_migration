@@ -8,23 +8,26 @@ echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
 > /etc/apt/apt.conf.d/00keep-debs
 
 # Update apt database
-apt update
+apt update > /dev/null
 
 # 
 mkdir -p /var/cache/apt/archives 2> /dev/null
 mount --bind /vagrant/archives /var/cache/apt/archives
 
-# 
-apt install -y ${PKG}
+# Installing basic packages
+echo 'Installing basic packages'
+apt install -y ${PKG} > /dev/null
 
-# Install postgresql-common package
-apt install -y postgresql-common
+# Installing postgresql-common package
+echo 'Installing postgresql-common package'
+apt install -y postgresql-common > /dev/null
 
 # Script to automate repository configuration
 /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
 
 # PostgreSQL installation
-apt -y install postgresql-${PGMAJOR} barman-cli
+echo 'PostgreSQL installation'
+apt -y install postgresql-${PGMAJOR} barman-cli > /dev/null
 
 # Create a new sudoers file for postgres user
 echo -e "\n${PGSUDO}" > /etc/sudoers.d/postgres
@@ -32,10 +35,10 @@ echo -e "\n${PGSUDO}" > /etc/sudoers.d/postgres
 # File permissios
 chmod 0440 /etc/sudoers.d/postgres
 
-#
+# Create extra configuration file
 cat /vagrant/files/02-postgresql.conf > ${PGCONFDIR}/conf.d/00-provision.conf
 
-#
+# pg_hba.conf
 cat /vagrant/files/01-pg_hba.conf > ${PGHBA}
 
 # Create a mew configuration file for standby

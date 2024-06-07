@@ -9,8 +9,9 @@ systemctl disable --now postgresql
 # Remove data directory
 rm -fr ${PGDATA}
 
-# Install barman
-apt install -y barman
+# Installing B
+echo 'Installing Barman...'
+apt install -y barman > /dev/null
 
 #  Generate SSH key for barman user
 su - barman -c "ssh-keygen -P '' -t rsa -f ~/.ssh/id_rsa"
