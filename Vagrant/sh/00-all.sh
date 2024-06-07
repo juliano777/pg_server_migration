@@ -46,7 +46,7 @@ sed "s/CLUSTER_NAME/${CLUSTER_NAME}/g" \
     /vagrant/files/05-rep.conf > ${PGCONFDIR}/conf.d/01-rep.conf
 
 # Adjusting file permissions
-chmod 0600 ${PGCONFDIR}/conf.d/01-rep.conf
+chmod 0600 ${PGCONFDIR}/conf.d/*
 
 # Creating .psqlrc file
 cat /vagrant/files/03-.psqlrc > ~postgres/.psqlrc
@@ -68,4 +68,4 @@ cat /vagrant/files/00-hosts > /etc/hosts
 
 #  Generate SSH key for postgres user
 su - postgres -c "ssh-keygen -P '' -t rsa -f ~/.ssh/id_rsa"
-sudo cp ~postgres/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-postgres.pub
+cp ~postgres/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-postgres.pub
