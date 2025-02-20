@@ -1,3 +1,12 @@
+# Preparation
+
+Preparatory procedures for all Postgres servers.
+
+
+
+
+## DNS
+
 [#] Server names on /etc/hosts
 
 ```bash
@@ -14,6 +23,8 @@ cat << EOF >> /etc/hosts
 192.168.56.22 new-beta.my-domain new-beta
 EOF
 ```
+
+## PostgreSQL installation
 
 [#] Automated repository configuration
 
@@ -38,11 +49,18 @@ Just press Enter.
 read -p 'Enter the majority version of Postgres to be installed: ' PGMAJOR
 ```
 
+> **Note:**
+> Have in mind that the Postgres major versions for old and new servers will
+> be different. Of course, the new ones will have a more current version than
+> the old ones.
+
 
 [#] PostgreSQL installation  
 ```bash
 apt -y install postgresql-${PGMAJOR}
 ```
+
+## Postgres post installation
 
 [#] postgres OS user can start/stop/restart/reload the PostgreSQL service using
 SystemD
@@ -79,7 +97,3 @@ If not check the reason and fix it.
 ```bash
 sudo systemctl restart postgresql
 ```
-
-
-
-

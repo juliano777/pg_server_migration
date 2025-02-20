@@ -1,10 +1,11 @@
-## Building our lab - sample databases
+# Building our lab - sample databases
 
-[pagila](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/pagila/pagila/pagila-0.10.1.zip)
+## About the sample databases
 
-[french-towns-communes-francaises](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/french-towns-communes-francais/french-towns-communes-francaises-1.0/french-towns-communes-francaises-1.0.tar.gz)
+- [pagila](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/pagila/pagila/pagila-0.10.1.zip)
+- [french-towns-communes-francaises](https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/french-towns-communes-francais/french-towns-communes-francaises-1.0/french-towns-communes-francaises-1.0.tar.gz)
 
-
+## User and database creation
 
 [postgres $][old-gamma] Create user and database
 ```bash
@@ -21,7 +22,9 @@ SQL='CREATE DATABASE db_ftcf OWNER user_ftcf'
 psql -c "${SQL}"
 ```
 
-[postgres $][old-gamma] Populating the new database  
+## Populating the new database
+
+[postgres $][old-gamma] OS shell commands to populate the database
 ```bash
 # URL for the new database
 URL="https://ftp.postgresql.org/pub/projects/pgFoundry/dbsamples/\
@@ -51,6 +54,8 @@ psql -U user_ftcf -d db_ftcf -f ${D}/*.sql
 ```bash
 psql -U user_ftcf db_ftcf
 ```
+
+
 
 [>][old-gamma] Create a publication
 
