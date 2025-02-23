@@ -10,8 +10,8 @@ echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' \
 # Update apt database
 apt update > /dev/null
 
-# 
-mkdir -p /var/cache/apt/archives 2> /dev/null
+# Debian archive directory
+mkdir -p /var/cache/apt/archives /vagrant/archives 2> /dev/null
 mount --bind /vagrant/archives /var/cache/apt/archives
 
 # Installing basic packages
