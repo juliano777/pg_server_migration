@@ -1,3 +1,3 @@
 .vagrant
-Vagrant/archives/*
-Vagrant/ssh/*
+lab/Vagrant/archives/*
+lab/Vagrant/ssh/*

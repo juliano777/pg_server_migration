@@ -1,4 +1,8 @@
-# bla bla bla
+'''
+This file constains SQL strings to create helper functions.
+'''
+
+# Function to get all tables from a publication
 sql_get_publication_tables = """
 CREATE OR REPLACE FUNCTION fn_tmp_get_publication_tables (
     IN pub_name text)
@@ -19,7 +23,7 @@ $body$
 LANGUAGE PLPGSQL;
 """
 
-# bla bla bla
+# Function to get all sequences from a publication
 sql_get_publication_sequences = """
 CREATE OR REPLACE FUNCTION fn_tmp_get_publication_sequences (
     IN pub_name text)
@@ -53,7 +57,7 @@ $body$
 LANGUAGE PLPGSQL;
 """
 
-# bla bla bla
+# Function to the last value from a sequence
 sql_get_last_seq_value = """
 CREATE OR REPLACE FUNCTION fn_tmp_get_last_seq_value (
     IN pub_name text)
