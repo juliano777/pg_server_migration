@@ -139,12 +139,6 @@ CREATE SUBSCRIPTION sub_ftcf
 
 
 
-
-
-
-
-
-
 function get_publication_tables(){
     SQL="
     SELECT
