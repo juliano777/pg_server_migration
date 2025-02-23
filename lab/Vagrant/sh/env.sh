@@ -1,5 +1,5 @@
 # PostgreSQL major version
-PGMAJOR='16'
+PGMAJOR='17'
 
 # String to add to /etc/sudoers
 PGSUDO="postgres ALL=(ALL) NOPASSWD: \

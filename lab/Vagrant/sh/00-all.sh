@@ -67,5 +67,6 @@ rm -f /etc/apt/apt.conf.d/00keep-debs
 cat /vagrant/files/00-hosts > /etc/hosts
 
 #  Generate SSH key for postgres user
+mkdir /vagrant/ssh 2> /dev/null
 su - postgres -c "ssh-keygen -P '' -t rsa -f ~/.ssh/id_rsa"
 cp ~postgres/.ssh/id_rsa.pub /vagrant/ssh/`hostname -s`-postgres.pub
